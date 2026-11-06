@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# design source exports and tooling files (kept local, not published)
+/public/assets/Website_Look/
+/public/assets/Personal-Page-Char.*
+/public/assets/hero-building.png
+/public/assets/hero-carousel.png
+/AGENTS.md
