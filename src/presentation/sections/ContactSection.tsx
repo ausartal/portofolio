@@ -7,6 +7,9 @@ import { contact, site } from "@/domain/content/portfolio";
 import { Ink } from "../components/Ink";
 import { Stage } from "../components/Stage";
 
+/** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
+const FILL = "absolute inset-0 pointer-events-none [&_a]:pointer-events-auto";
+
 /**
  * [07] THE NEXT CHAPTER — comp `[05]-Page.svg`, 1920 x 1400, white field. The
  * footer is a child of the same Stage because the comp draws it on this canvas.
@@ -42,7 +45,7 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
       : {
           initial: { opacity: 0 },
           whileInView: { opacity: 1 },
-          viewport: { once: true, amount: 0.1 },
+          viewport: { once: true, amount: "some" as const },
           transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
         };
 
@@ -84,7 +87,7 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
         {contact.aside}
       </Ink>
 
-      <motion.div {...fade(0.04)}>
+      <motion.div className={FILL} {...fade(0.04)}>
         <Ink
           as="h2"
           box={[78.8, 320, 1036.4, 78.8]}
@@ -139,7 +142,7 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
       <span className="visually-hidden">{contact.headingTail}</span>
 
       {contact.body.map((paragraph, index) => (
-        <motion.div key={paragraph.slice(0, 24)} {...fade(0.14 + index * 0.05)}>
+        <motion.div key={paragraph.slice(0, 24)} className={FILL} {...fade(0.14 + index * 0.05)}>
           <Ink
             box={[76.3, 600.8 + index * 78, 876.3, 40]}
             face="inter"
@@ -156,7 +159,7 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
 
       <span className="absolute bg-black" style={{ left: 72, top: 866, width: 910, height: 1 }} />
 
-      <motion.div {...fade(0.2)}>
+      <motion.div className={FILL} {...fade(0.2)}>
         <Ink box={[78.4, 931.2, 241.2, 12]} face="inter" size={16} lh={24} ls={-0.0078} color="#1E1E1E" dx={-1} dy={0.5}>
           {contact.prompt}
         </Ink>

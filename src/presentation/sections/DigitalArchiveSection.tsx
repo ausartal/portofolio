@@ -6,6 +6,9 @@ import { digitalArchive } from "@/domain/content/portfolio";
 import { Ink } from "../components/Ink";
 import { Stage } from "../components/Stage";
 
+/** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
+const FILL = "absolute inset-0 pointer-events-none [&_a]:pointer-events-auto";
+
 /**
  * [02] DIGITAL ARCHIVES — comp `[02]-Page.svg`, 1920 x 1080, field #022BD3.
  *
@@ -48,7 +51,7 @@ function ArchiveComp() {
       : {
           initial: { opacity: 0 },
           whileInView: { opacity: 1 },
-          viewport: { once: true, amount: 0.1 },
+          viewport: { once: true, amount: "some" as const },
           transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
         };
 
@@ -71,7 +74,7 @@ function ArchiveComp() {
         {digitalArchive.label}
       </Ink>
 
-      <motion.div {...fade(0.06)}>
+      <motion.div className={FILL} {...fade(0.06)}>
         <Ink
           as="h3"
           box={[80.6, 109.6, 1176.2, 61.3]}
@@ -96,7 +99,7 @@ function ArchiveComp() {
         {"trapped inside.”"}
       </Ink>
 
-      <motion.div {...fade(0.1)}>
+      <motion.div className={FILL} {...fade(0.1)}>
         <Ink
           as="h4"
           box={[78.8, 274.7, 625.1, 148.5]}
@@ -115,7 +118,7 @@ function ArchiveComp() {
       </motion.div>
 
       {project.paragraphs.map((paragraph, index) => (
-        <motion.div key={paragraph.slice(0, 24)} {...fade(0.16 + index * 0.06)}>
+        <motion.div key={paragraph.slice(0, 24)} className={FILL} {...fade(0.16 + index * 0.06)}>
           <Ink
             box={index === 0 ? [75.8, 493.8, 656.1, 67.5] : [76.8, 604.8, 669.5, 67.6]}
             face="inter"
@@ -162,7 +165,7 @@ function ArchiveComp() {
 
       <span className="absolute bg-white/25" style={{ left: 70, top: 842, width: 679, height: 1 }} />
 
-      <motion.div {...fade(0.32)}>
+      <motion.div className={FILL} {...fade(0.32)}>
         <Ink
           box={[71, 864.8, 111.5, 10.5]}
           face="inter"

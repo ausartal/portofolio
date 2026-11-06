@@ -6,6 +6,9 @@ import { biography, categoryTags } from "@/domain/content/portfolio";
 import { Ink, type Box } from "../components/Ink";
 import { Stage } from "../components/Stage";
 
+/** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
+const FILL = "absolute inset-0 pointer-events-none [&_a]:pointer-events-auto";
+
 /**
  * [04] BEHIND THE SCENES — comp `[03]-Page.svg`, 1920 x 1080, white field.
  *
@@ -56,7 +59,7 @@ function BiographyComp() {
       : {
           initial: { opacity: 0 },
           whileInView: { opacity: 1 },
-          viewport: { once: true, amount: 0.1 },
+          viewport: { once: true, amount: "some" as const },
           transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
         };
 
@@ -77,7 +80,7 @@ function BiographyComp() {
         {biography.label}
       </Ink>
 
-      <motion.div {...fade(0.04)}>
+      <motion.div className={FILL} {...fade(0.04)}>
         <Ink
           as="h3"
           box={[98.8, 109.5, 951.8, 61.5]}
@@ -136,7 +139,7 @@ function BiographyComp() {
         />
       </motion.div>
 
-      <motion.div {...fade(0.08)}>
+      <motion.div className={FILL} {...fade(0.08)}>
         <Ink
           as="h4"
           box={[698.4, 320.1, 760.1, 146.5]}
@@ -154,14 +157,14 @@ function BiographyComp() {
         </Ink>
       </motion.div>
 
-      <motion.div {...fade(0.12)}>
+      <motion.div className={FILL} {...fade(0.12)}>
         <Ink box={[697.5, 519.1, 942.1, 16.6]} face="inter" size={17} lh={27} color="#141824" dx={-1} dy={1}>
           {biography.intro}
         </Ink>
       </motion.div>
 
       {biography.body.map((paragraph, index) => (
-        <motion.div key={paragraph.slice(0, 24)} {...fade(0.16 + index * 0.05)}>
+        <motion.div key={paragraph.slice(0, 24)} className={FILL} {...fade(0.16 + index * 0.05)}>
           <Ink
             box={[696.4, [578.3, 670.3, 762.3][index] ?? 578.3, 1157.6, 70]}
             face="inter"
@@ -178,7 +181,7 @@ function BiographyComp() {
       {categoryTags.map((tag, index) => {
         const t = TAGS[index];
         return (
-          <motion.div key={tag.label} {...fade(0.22 + index * 0.03)}>
+          <motion.div key={tag.label} className={FILL} {...fade(0.22 + index * 0.03)}>
             <span
               className="absolute border border-[#DADDDC]"
               style={{ left: t.rect[0] - 0.5, top: t.rect[1] - 0.5, width: t.rect[2] + 1, height: t.rect[3] + 1 }}
