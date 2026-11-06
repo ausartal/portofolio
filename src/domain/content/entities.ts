@@ -26,6 +26,8 @@ export interface SelectedWork {
   readonly statement: string;
   readonly tags: readonly string[];
   readonly year: string;
+  readonly image: string;
+  readonly imageAlt: string;
 }
 
 export interface Project {

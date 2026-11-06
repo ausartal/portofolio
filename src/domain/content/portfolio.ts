@@ -25,18 +25,18 @@ export const site = {
 } as const;
 
 export const navigation: readonly NavigationItem[] = [
-  { id: "transmit", label: "TRANSMIT", href: "#transmit" },
-  { id: "inventory", label: "INVENTORY", href: "#inventory" },
+  { id: "tavern", label: "TAVERN", href: "#tavern" },
   { id: "quest", label: "QUEST", href: "#quest" },
   { id: "character", label: "CHARACTER", href: "#character" },
-  { id: "tavern", label: "TAVERN", href: "#tavern" },
+  { id: "inventory", label: "INVENTORY", href: "#inventory" },
+  { id: "transmit", label: "TRANSMIT", href: "#transmit" },
 ];
 
 export const socials: readonly SocialLink[] = [
   { label: "Github", href: "https://github.com/ausartal" },
-  { label: "Instagram", href: "https://instagram.com/ausartal" },
-  { label: "Discord", href: "https://discord.com" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/ausartal" },
+  { label: "Instagram", href: "https://www.instagram.com/aal.naf/" },
+  { label: "Discord", href: "https://discord.gg/n7kQhHZeq" },
+  { label: "Linkedin", href: "https://www.linkedin.com/in/ahmad-nab-al-falah-50271a2aa/" },
 ];
 
 export const selectedWorks: readonly SelectedWork[] = [
@@ -45,16 +45,20 @@ export const selectedWorks: readonly SelectedWork[] = [
     title: "THE LAST FREQUENCY",
     statement:
       "Frequency becomes the symbol of Liam's connection with his father, as well as the village's only link to the outside world. The word 'last' illustrates a situation where hope is almost gone.",
-    tags: ["Character development", "Hope & resilience"],
-    year: "2019",
+    tags: ["Emotional storytelling", "Symbolism & metaphors"],
+    year: "2024",
+    image: "/assets/selected-last-frequency.png",
+    imageAlt: "The Last Frequency artwork",
   },
   {
     id: "almost-there",
     title: "ALMOST THERE",
     statement:
       "Almost There symbolizes the struggle to reclaim one's life. The quote \u201Cfairy tales can come true, it all depends on you\u201D emphasizes that miracles are not just awaited, but created by your own hands.",
-    tags: ["Emotional storytelling", "Symbolism & metaphors"],
-    year: "2024",
+    tags: ["Character development", "Hope & resilience"],
+    year: "2019",
+    image: "/assets/selected-almost-there.png",
+    imageAlt: "Almost There artwork",
   },
 ];
 
@@ -89,7 +93,7 @@ export const biography = {
     "From illustrated worlds and interactive experiences to digital products and software systems, my work moves between creativity and technical problem-solving. I believe good work is built through curiosity, experimentation, and thoughtful construction, where a strong concept meets careful execution and an appreciation for even the smallest details. For me, the process is just as important as the outcome \u2014 every sketch, prototype, revision, and unexpected detour is an opportunity to learn something new.",
     "Away from the screen, you'll probably find me exploring visual culture, collecting references, browsing through books, sketching spontaneous ideas, or observing the little details of everyday life. I'm naturally curious about how things are made, how people experience them, and how seemingly unrelated ideas can come together to create something entirely new. There's always another subject to explore, another skill to develop, and another rabbit hole worth getting lost in.",
   ],
-  portrait: "/assets/about-portrait.png",
+  portrait: "/assets/design/behind-the-scenes-portrait.png",
 } as const;
 
 export const about = {
@@ -101,97 +105,25 @@ export const about = {
 
 export const categoryTags: readonly CategoryTag[] = [
   { label: "Visual storytelling" },
+  { label: "World building" },
   { label: "Creative technology" },
   { label: "Architecture" },
   { label: "Programming" },
   { label: "Music & Sound" },
-  { label: "World building" },
 ];
 
 export const projects: readonly Project[] = [
   {
-    id: "akurat",
-    slug: "akurat",
-    name: "AKURAT \u2014 2026",
-    year: "2026",
-    discipline: "EDTECH & INTELLIGENT ASSESSMENT SYSTEM",
+    id: "mda-webtoon",
+    slug: "mda-webtoon",
+    name: "MDA Webtoon \u2014 2020",
+    year: "2020",
+    discipline: "DIGITAL ILLUSTRATION & COMIC PRODUCTION",
     summary:
-      "An intelligent chemistry learning and assessment platform designed to enhance educational experiences through adaptive testing, competency tracking, and data-driven learning analytics. Connects students, educators, and administrators through an integrated digital learning ecosystem.",
-    tags: ["Product Design", "Full-Stack Development", "Adaptive Assessment"],
-    image: "/assets/projects/project-akurat.png",
-    imageAlt: "Akurat product logotype",
-  },
-  {
-    id: "extract",
-    slug: "extract",
-    name: "EXTRACT \u2014 2026",
-    year: "2026",
-    discipline: "FINANCIAL TECHNOLOGY & PRODUCT DEVELOPMENT",
-    summary:
-      "An enterprise expense management platform designed to streamline reimbursement workflows and financial operations. Integrates expense tracking, OCR-powered document processing, policy enforcement, approval management, and financial oversight into one connected ecosystem.",
-    tags: ["Product Design", "Full-Stack Development", "FinTech", "Sas"],
-    image: "/assets/projects/project-extract.png",
-    imageAlt: "Extract product mark",
-  },
-  {
-    id: "medtrace",
-    slug: "medtrace",
-    name: "MEDTRACE \u2014 2025",
-    year: "2025",
-    discipline: "HEALTHCARE TECHNOLOGY & DIGITAL IDENTITY",
-    summary:
-      "A healthcare technology concept focused on connecting medical information through a clear and recognizable digital identity. The visual direction combines medical symbolism with a modern technology-oriented approach.",
-    tags: ["Healthcare", "Mobile Development", "Website Development"],
-    image: "/assets/projects/project-medtrace.png",
-    imageAlt: "MedTrace medical care tracker identity",
-  },
-  {
-    id: "pensfest",
-    slug: "pensfest",
-    name: "PENSFEST \u2014 2024",
-    year: "2024",
-    discipline: "EVENT BRANDING & VISUAL IDENTITY",
-    summary:
-      "A visual identity concept for PENSFEST, translating the spirit of creativity, collaboration, and celebration into a recognizable visual system. Designed to establish a cohesive identity across event communications.",
-    tags: ["Event Managing", "Logo Design", "Graphic Design"],
-    image: "/assets/projects/project-pensfest.png",
-    imageAlt: "PENSFEST event branding",
-  },
-  {
-    id: "world-forge",
-    slug: "world-forge",
-    name: "WORLD FORGE \u2014 2023",
-    year: "2023",
-    discipline: "GAME DEVELOPMENT & WORLD BUILDING",
-    summary:
-      "An exploration of digital world creation and interactive environment design. Focused on shaping immersive spaces through visual composition, environmental elements, and creative world-building.",
-    tags: ["Game Development", "World Building", "Environment Design"],
-    image: "/assets/projects/project-worldforge.png",
-    imageAlt: "World Forge environment study",
-  },
-  {
-    id: "nous",
-    slug: "nous",
-    name: "NOUS \u2014 2023",
-    year: "2023",
-    discipline: "VISUAL IDENTITY & CREATIVE DESIGN",
-    summary:
-      "A visual identity exploration centered around simplicity, geometry, and visual recognition. Developed a distinctive graphic mark to establish a cohesive and memorable brand presence.",
-    tags: ["Logo Design", "Brand Identity", "Visual Design"],
-    image: "/assets/projects/project-nous.png",
-    imageAlt: "Nous geometric brand mark",
-  },
-  {
-    id: "cornec",
-    slug: "cornec",
-    name: "CORNECT \u2014 2022",
-    year: "2022",
-    discipline: "PROJECT IDENTITY & DIGITAL DESIGN",
-    summary:
-      "An exploration of visual identity and digital product design, bringing together a distinctive visual language and a cohesive design direction.",
-    tags: ["Brand Identity", "Graphic Design"],
-    image: "/assets/projects/project-cornec.png",
-    imageAlt: "Cornec identity mark",
+      "Contributed to digital comic and webtoon production through 2D illustration and visual development. Focused on translating narrative concepts into expressive visuals that support character identity and storytelling.",
+    tags: ["2D Illustration", "Webtoon", "Visual Storytelling"],
+    image: "/assets/projects/project-mdawebtoon.png",
+    imageAlt: "MDA Webtoon illustration panel",
   },
   {
     id: "seameo",
@@ -206,21 +138,93 @@ export const projects: readonly Project[] = [
     imageAlt: "SEAMEO virtual exhibition space",
   },
   {
-    id: "mda-webtoon",
-    slug: "mda-webtoon",
-    name: "MDA Webtoon \u2014 2020",
-    year: "2020",
-    discipline: "DIGITAL ILLUSTRATION & COMIC PRODUCTION",
+    id: "cornec",
+    slug: "cornec",
+    name: "CORNECT \u2014 2022",
+    year: "2022",
+    discipline: "PROJECT IDENTITY & DIGITAL DESIGN",
     summary:
-      "Contributed to digital comic and webtoon production through 2D illustration and visual development. Focused on translating narrative concepts into expressive visuals that support character identity and storytelling.",
-    tags: ["2D Illustration", "Webtoon", "Visual Storytelling"],
-    image: "/assets/projects/project-mdawebtoon.png",
-    imageAlt: "MDA Webtoon illustration panel",
+      "An exploration of visual identity and digital product design, bringing together a distinctive visual language and a cohesive design direction.",
+    tags: ["Brand Identity", "Graphic Design"],
+    image: "/assets/projects/project-cornec.png",
+    imageAlt: "Cornec identity mark",
+  },
+  {
+    id: "nous",
+    slug: "nous",
+    name: "NOUS \u2014 2023",
+    year: "2023",
+    discipline: "VISUAL IDENTITY & CREATIVE DESIGN",
+    summary:
+      "A visual identity exploration centered around simplicity, geometry, and visual recognition. Developed a distinctive graphic mark to establish a cohesive and memorable brand presence.",
+    tags: ["Logo Design", "Brand Identity", "Visual Design"],
+    image: "/assets/projects/project-nous.png",
+    imageAlt: "Nous geometric brand mark",
+  },
+  {
+    id: "world-forge",
+    slug: "world-forge",
+    name: "WORLD FORGE \u2014 2023",
+    year: "2023",
+    discipline: "GAME DEVELOPMENT & WORLD BUILDING",
+    summary:
+      "An exploration of digital world creation and interactive environment design. Focused on shaping immersive spaces through visual composition, environmental elements, and creative world-building.",
+    tags: ["Game Development", "World Building", "Environment Design"],
+    image: "/assets/projects/project-worldforge.png",
+    imageAlt: "World Forge environment study",
+  },
+  {
+    id: "pensfest",
+    slug: "pensfest",
+    name: "PENSFEST \u2014 2024",
+    year: "2024",
+    discipline: "EVENT BRANDING & VISUAL IDENTITY",
+    summary:
+      "A visual identity concept for PENSFEST, translating the spirit of creativity, collaboration, and celebration into a recognizable visual system. Designed to establish a cohesive identity across event communications.",
+    tags: ["Event Managing", "Logo Design", "Graphic Design"],
+    image: "/assets/projects/project-pensfest.png",
+    imageAlt: "PENSFEST event branding",
+  },
+  {
+    id: "medtrace",
+    slug: "medtrace",
+    name: "MEDTRACE \u2014 2025",
+    year: "2025",
+    discipline: "HEALTHCARE TECHNOLOGY & DIGITAL IDENTITY",
+    summary:
+      "A healthcare technology concept focused on connecting medical information through a clear and recognizable digital identity. The visual direction combines medical symbolism with a modern technology-oriented approach.",
+    tags: ["Healthcare", "Mobile Development", "Website Development"],
+    image: "/assets/projects/project-medtrace.png",
+    imageAlt: "MedTrace medical care tracker identity",
+  },
+  {
+    id: "extract",
+    slug: "extract",
+    name: "EXTRACT \u2014 2026",
+    year: "2026",
+    discipline: "FINANCIAL TECHNOLOGY & PRODUCT DEVELOPMENT",
+    summary:
+      "An enterprise expense management platform designed to streamline reimbursement workflows and financial operations. Integrates expense tracking, OCR-powered document processing, policy enforcement, approval management, and financial oversight into one connected ecosystem.",
+    tags: ["Product Design", "Full-Stack Development", "FinTech", "Sas"],
+    image: "/assets/projects/project-extract.png",
+    imageAlt: "Extract product mark",
+  },
+  {
+    id: "akurat",
+    slug: "akurat",
+    name: "AKURAT \u2014 2026",
+    year: "2026",
+    discipline: "EDTECH & INTELLIGENT ASSESSMENT SYSTEM",
+    summary:
+      "An intelligent chemistry learning and assessment platform designed to enhance educational experiences through adaptive testing, competency tracking, and data-driven learning analytics. Connects students, educators, and administrators through an integrated digital learning ecosystem.",
+    tags: ["Product Design", "Full-Stack Development", "Adaptive Assessment"],
+    image: "/assets/projects/project-akurat.png",
+    imageAlt: "Akurat product logotype",
   },
 ];
 
 export const contact = {
-  chapter: "[07]",
+  chapter: "[05]",
   label: "THE NEXT CHAPTER",
   aside: "Let's Work Together",
   headingLead: "GOT SOMETHING IN MIND?",

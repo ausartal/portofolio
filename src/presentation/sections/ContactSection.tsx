@@ -1,127 +1,202 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { contact, site } from "@/domain/content/portfolio";
-import { Reveal } from "../components/Reveal";
-import { SectionHeader } from "../components/SectionHeader";
+import { Ink } from "../components/Ink";
+import { Stage } from "../components/Stage";
 
 /**
- * [07] THE NEXT CHAPTER — closing block. Oversized two-tone headline,
- * gradient interactive field, and the direct mail action.
+ * [07] THE NEXT CHAPTER — comp `[05]-Page.svg`, 1920 x 1400, white field. The
+ * footer is a child of the same Stage because the comp draws it on this canvas.
+ *
+ *   eyebrow   [ 81.3  75.2  22.4 10.8]  Inter 600 12        #123DFF
+ *   label     [120.9  76.2 140    9  ]  Inter 600 12        #666B78
+ *   aside     [1731.1 80.3 112.6 11.3]  Inter 400 12        #666B78  right aligned
+ *   lead      [ 78.8 320  1036.4 78.8]  Anton 90 / 94.5     #123DFF
+ *   outline   [ 79.4 448   898.7 78.8]  Anton 90, 2px inner stroke #123DFF
+ *   body      [ 76.3 600.8 876.3 119.6] Inter 400 16 / 26   #666B78
+ *   rule      x 72..982, y 866.5, 1px black
+ *   prompt    [ 78.4 931.2 241.2 12  ]  Inter 400 16        #1E1E1E
+ *   bar       x 76..982, y 961..1021, 1px #666B78
+ *   button    x 771..974, y 966..1016, #4C2929 / #1F2126
+ *   artwork   x 1034 y 33, 912 x 1221
  */
-export function ContactSection({ footer }: { readonly footer: React.ReactNode }) {
-  const ref = useRef<HTMLElement>(null);
+export function ContactSection({ footer }: { readonly footer: ReactNode }) {
+  return (
+    <section id="transmit" aria-labelledby="contact-heading" className="relative w-full bg-white">
+      <Stage height={1400} className="bg-white">
+        <ContactComp footer={footer} />
+      </Stage>
+    </section>
+  );
+}
+
+function ContactComp({ footer }: { readonly footer: ReactNode }) {
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end end"],
-  });
-  const visualY = useTransform(scrollYProgress, [0, 1], ["6%", reduced ? "6%" : "-6%"]);
+
+  const fade = (delay: number) =>
+    reduced
+      ? {}
+      : {
+          initial: { opacity: 0 },
+          whileInView: { opacity: 1 },
+          viewport: { once: true, amount: 0.1 },
+          transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
+        };
 
   return (
-    <section
-      ref={ref}
-      id="tavern"
-      aria-labelledby="contact-heading"
-      className="relative w-full overflow-hidden bg-white py-[clamp(4rem,7vw,7.5rem)]"
-    >
-      <div id="contact-heading">
-        <SectionHeader
-          chapter={contact.chapter}
-          label={contact.label}
-          aside={contact.aside}
-          heading={contact.headingLead}
-          tone="light"
-          headingClassName="text-electric"
+    <div className="absolute inset-0 font-inter">
+      <motion.div
+        className="absolute"
+        style={{ left: 1034, top: 33, width: 912, height: 1221 }}
+        initial={reduced ? false : { opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Image
+          src={contact.visual}
+          alt="Character illustration for The Next Chapter"
+          fill
+          sizes="912px"
+          className="select-none object-fill"
+          priority
         />
-        <span className="visually-hidden">{contact.headingTail}</span>
-      </div>
+      </motion.div>
 
-      <div className="measure mt-[clamp(2.5rem,4vw,4rem)] grid items-start gap-x-[4rem] gap-y-[3rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
-        {/* Left — copy and action */}
-        <div>
-          <Reveal>
-            <p className="font-[family-name:var(--font-anton)] text-[clamp(2.25rem,4.7vw,5.625rem)] leading-[1.05] tracking-[0.1em] text-ink">
-              {contact.headingTail}
-            </p>
-          </Reveal>
+      <Ink box={[81.3, 75.2, 22.4, 10.8]} face="inter" size={12} lh={19.2} weight={600} color="#123DFF" dx={-1} dy={1}>
+        {contact.chapter}
+      </Ink>
+      <Ink
+        box={[120.9, 76.2, 140, 9]}
+        face="inter"
+        size={12}
+        lh={19.2}
+        weight={600}
+        ls={0.117}
+        color="#666B78"
+      >
+        {contact.label}
+      </Ink>
+      <Ink box={[1731.1, 80.3, 112.6, 11.3]} face="inter" size={12} lh={19.2} ls={-0.009} color="#666B78" align="right">
+        {contact.aside}
+      </Ink>
 
-          <div className="mt-8 space-y-5">
-            {contact.body.map((paragraph, index) => (
-              <Reveal key={paragraph.slice(0, 24)} delay={0.06 + index * 0.05}>
-                <p className="max-w-[56rem] font-[family-name:var(--font-inter)] text-[clamp(0.9375rem,1.1vw,1rem)] leading-[1.6] text-muted">
-                  {paragraph}
-                </p>
-              </Reveal>
-            ))}
-          </div>
+      <motion.div {...fade(0.04)}>
+        <Ink
+          as="h2"
+          box={[78.8, 320, 1036.4, 78.8]}
+          face="anton"
+          size={90}
+          lh={94.5}
+          ls={0.1}
+          color="#123DFF"
+          dx={-2}
+          dy={1}
+        >
+          <span id="contact-heading">{contact.headingLead}</span>
+        </Ink>
+      </motion.div>
 
-          {/* Prompt + action bar */}
-          <Reveal delay={0.16}>
-            <div className="mt-12 border-t border-ink/25 pt-6">
-              <p className="font-[family-name:var(--font-inter)] text-[clamp(0.9375rem,1.1vw,1rem)] leading-[1.6] text-ink">
-                {contact.prompt}
-              </p>
-              <p className="mt-2 font-[family-name:var(--font-inter)] text-[clamp(0.9375rem,1.1vw,1rem)] leading-[1.6] text-muted-soft">
-                {contact.promptBody}
-              </p>
-
-              <a
-                href={`mailto:${site.email}`}
-                className="group mt-6 inline-flex items-center gap-3 rounded-full bg-electric px-7 py-4 font-[family-name:var(--font-inter)] text-[0.9375rem] leading-[1.6] text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink-deep"
-              >
-                {contact.action}
-                <svg
-                  viewBox="0 0 13 11"
-                  fill="none"
-                  aria-hidden
-                  className="size-[13px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1.5"
-                >
-                  <path d="M0 5.5h11M7 1l4.5 4.5L7 10" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </a>
-            </div>
-          </Reveal>
-
-          {/* Direct mail */}
-          <Reveal delay={0.2}>
-            <div className="mt-12 border-t border-hairline pt-5">
-              <p className="font-[family-name:var(--font-inter)] text-caption leading-[1.6] text-chrome-dim">
-                {contact.emailPrompt}
-              </p>
-              <a
-                href={`mailto:${site.email}`}
-                className="mt-1 inline-block font-[family-name:var(--font-inter)] text-caption leading-[1.6] text-chrome-dim underline decoration-transparent underline-offset-4 transition-colors duration-300 hover:text-electric hover:decoration-current"
-              >
-                {site.email}
-              </a>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Right — visual field */}
-        <Reveal direction="left" amount={0.15} className="lg:sticky lg:top-16">
-          <div className="relative aspect-[912/1221] w-full overflow-hidden">
-            <motion.div
-              style={{ y: visualY }}
-              className="absolute inset-x-0 -top-[6%] -bottom-[6%]"
+      {/* Outlined line: the comp strokes 4px but masks it to the glyph, i.e. a 2px inner stroke */}
+      <motion.svg
+        {...fade(0.1)}
+        aria-hidden
+        className="absolute left-0 top-0 overflow-visible"
+        width={1920}
+        height={700}
+        viewBox="0 0 1920 700"
+      >
+        <defs>
+          <mask id="contact-outline-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="700">
+            <text
+              x={76}
+              y={525.5}
+              fill="white"
+              className="font-anton"
+              style={{ fontSize: 90, letterSpacing: "0.1em" }}
             >
-              <Image
-                src={contact.visual}
-                alt="Abstract visual field"
-                fill
-                sizes="(max-width: 1024px) 100vw, 46vw"
-                className="object-cover"
-              />
-            </motion.div>
-          </div>
-        </Reveal>
-      </div>
+              {contact.headingTail}
+            </text>
+          </mask>
+        </defs>
+        <text
+          data-ink-box={process.env.NODE_ENV === "production" ? undefined : "79.4,448,898.7,78.8"}
+          x={76}
+          y={525.5}
+          fill="none"
+          stroke="#123DFF"
+          strokeWidth={4}
+          mask="url(#contact-outline-mask)"
+          className="font-anton"
+          style={{ fontSize: 90, letterSpacing: "0.1em" }}
+        >
+          {contact.headingTail}
+        </text>
+      </motion.svg>
+      <span className="visually-hidden">{contact.headingTail}</span>
 
-      {/* Footer */}
+      {contact.body.map((paragraph, index) => (
+        <motion.div key={paragraph.slice(0, 24)} {...fade(0.14 + index * 0.05)}>
+          <Ink
+            box={[76.3, 600.8 + index * 78, 876.3, 40]}
+            face="inter"
+            size={15.9}
+            lh={26}
+            color="#666B78"
+            width={884}
+            dy={2}
+          >
+            {paragraph}
+          </Ink>
+        </motion.div>
+      ))}
+
+      <span className="absolute bg-black" style={{ left: 72, top: 866, width: 910, height: 1 }} />
+
+      <motion.div {...fade(0.2)}>
+        <Ink box={[78.4, 931.2, 241.2, 12]} face="inter" size={16} lh={24} ls={-0.0078} color="#1E1E1E" dx={-1} dy={0.5}>
+          {contact.prompt}
+        </Ink>
+        <span
+          className="absolute border border-solid border-[#666B78]"
+          style={{ left: 76, top: 961, width: 906, height: 60 }}
+        />
+        <Ink box={[91.3, 984.8, 575.6, 15.6]} face="inter" size={16} lh={24} color="#757575" dx={-1} dy={1}>
+          {contact.promptBody}
+        </Ink>
+        <a
+          href={`mailto:${site.email}`}
+          className="absolute border border-solid border-[#1F2126] bg-[#4C2929] transition-opacity duration-200 hover:opacity-90"
+          style={{ left: 771, top: 966, width: 203, height: 50 }}
+        >
+          <Ink
+            as="span"
+            box={[803.7, 985.9, 137.9, 11.2]}
+            origin={[771, 966]}
+            dx={-1}
+            dy={-1}
+            face="inter"
+            size={14.8}
+            lh={24}
+            color="#FFFFFF"
+          >
+            {contact.action}
+          </Ink>
+        </a>
+        <Ink box={[78.1, 1034, 439.8, 11.6]} face="inter" size={12} lh={19.2} ls={-0.004} color="#B3B3B3" dx={-1}>
+          {contact.emailPrompt}
+        </Ink>
+        <a href={`mailto:${site.email}`} className="hover:text-[#123DFF]" style={{ color: "#B3B3B3" }}>
+          <Ink as="span" box={[527.6, 1033.9, 164.4, 11.7]} face="inter" size={12} lh={19.2} ls={-0.011} dy={0.5} color="currentColor">
+            {site.email}
+          </Ink>
+        </a>
+      </motion.div>
+
       {footer}
-    </section>
+    </div>
   );
 }

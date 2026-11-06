@@ -3,11 +3,11 @@ interface TagProps {
   readonly className?: string;
 }
 
-/** Pill-shaped category tag with the 1px hairline border used throughout the comp. */
+/** Sharp rectangular category tag with 0 corner radius matching Figma comp. */
 export function Tag({ label, className = "" }: TagProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border border-hairline px-3 py-[0.375rem] font-[family-name:var(--font-inter)] text-micro leading-none text-muted-soft whitespace-nowrap ${className}`}
+      className={`inline-flex items-center justify-center rounded-none border border-[#DADDDC] px-3 h-[26px] font-inter text-[12px] leading-none text-[#C6C6C6] whitespace-nowrap transition-colors duration-200 ${className}`}
     >
       {label}
     </span>

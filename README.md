@@ -105,20 +105,22 @@ were sampled from the running Figma document rather than eyeballed.
 
 ### Typography
 
-Four families, matching the Figma document. Loaded through `next/font`, so each one is
-self-hosted and served from the same origin with no layout shift.
+Five families, matching the Figma document. All are resolved through `next/font`, so each one
+is self-hosted and served from the same origin with no layout shift.
 
 | Family | Usage | Source |
 | --- | --- | --- |
-| **Afacad** 700 | Oversized section headings, hero display type | Google Fonts |
-| **Anton** 400 | Contact headline | Google Fonts |
-| **Inter** 400 / 600 | Body copy, navigation, eyebrows, metadata | Google Fonts |
-| **League Spartan** 600 / 700 | Project logotypes | Google Fonts |
-| **LINE Seed JP** 400 / 700 | Japanese hero tagline, section titles | *Not on Google Fonts* |
+| **Afacad Flux** 700 | Hero display type, 200 px | Google Fonts |
+| **Afacad** 700 | Oversized section headings, 92 px | Google Fonts |
+| **Anton** 400 | Closing headlines, 90 and 76 px | Google Fonts |
+| **LINE Seed JP** 400 / 700 | Japanese hero tagline, navigation, card titles | Self-hosted, see Assets |
+| **Inter** 400 / 600 | Body copy, eyebrows, metadata | Google Fonts |
 
 Sizes are declared as named steps (`--text-display`, `--text-mega`, `--text-hero`,
 `--text-chapter`, `--text-title`, `--text-body`, `--text-caption`, `--text-micro`) with
 line-height and letter-spacing baked in, so vertical rhythm stays consistent across sections.
+Families are addressed as named utilities (`font-inter`, `font-afacad`, `font-afacad-flux`,
+`font-anton`, `font-line-seed`) backed by `@theme inline` keys.
 
 ### Motion
 
@@ -183,6 +185,31 @@ All raster assets are served through `next/image`, which handles resizing, moder
 negotiation, and lazy loading below the fold. The three hero images are marked `priority`
 so they are fetched eagerly.
 
+### Fonts
+
+Five families, matching the design's own text styles:
+
+| Family | Weights | Role | Source |
+| --- | --- | --- | --- |
+| **Afacad Flux** | 700 | Hero display, 200 px | Google Fonts |
+| **Afacad** | 700 | Section headings, 92 px | Google Fonts |
+| **Anton** | 400 | Closing headlines, 90 and 76 px | Google Fonts |
+| **LINE Seed JP** | 400 / 700 | Hero tagline, navigation, card titles | Self-hosted, `src/app/fonts/` |
+| **Inter** | 400 / 600 | Body, captions, tags | Google Fonts |
+
+LINE Seed JP is self-hosted because Google serves it as roughly 124 unicode-range slices of
+12 KB each, which makes every build issue hundreds of network requests and fail whenever
+`fonts.gstatic.com` times out. `scripts/build-line-seed-font.py` keeps the latin, latin-ext
+and kana slices the site actually renders and merges them into one file per weight
+(≈220 KB each) with fontTools. Re-run it only when the tagline or the served slices change:
+
+```
+uv run --with fonttools --with brotli python scripts/build-line-seed-font.py
+```
+
+The generated files are committed, so a build never needs the network for them. LINE Seed JP
+is licensed under the SIL Open Font License 1.1; `src/app/fonts/OFL.txt` carries the notice.
+
 ## Deployment
 
 The build output is fully static, so any static host works.
@@ -214,10 +241,11 @@ to `output: "export"` and upload `out/` to object storage behind a CDN.
 
 ## Notes and Known Constraints
 
-**`LINE Seed JP` is not available on Google Fonts.** The Japanese hero tagline
-(`パッションをカタチに。`) currently falls back to system UI fonts, which vary by platform. To
-match Figma exactly, place the font files under `src/app/fonts/` and switch that slot to
-`next/font/local`.
+**LINE Seed JP is self-hosted.** The face is on Google Fonts, but only as ~124 unicode-range
+slices, so `next/font/google` issues hundreds of fetches per build and fails when
+`fonts.gstatic.com` times out. `src/app/fonts/` holds a merged latin + latin-ext + kana subset
+per weight, built by `scripts/build-line-seed-font.py` and committed; `<html lang="en">` still
+carries the Japanese tagline, so the kana slice is required, not optional.
 
 **Server Components and `Date`.** The footer's copyright year is resolved at build time. Under
 Cache Components, Next.js 16 rejects an uncached `new Date()` during prerender, so `SiteFooter`
@@ -228,10 +256,11 @@ through normal composition rather than being imported across a client boundary.
 `@tailwindcss/postcss`, configured through `next.config.ts`. This is the Next.js 16 default for
 projects scaffolded with Turbopack enabled.
 
-**`font-[family-name:var(--font-*)]` utilities.** Font families are referenced through
-arbitrary-value utilities rather than named `font-*` classes. Declaring `--font-afacad` inside
-`@theme` would shadow the CSS variable that `next/font` generates, resolving it against itself
-and silently falling back to the body font.
+**Font families are theme keys.** Tailwind can address an arbitrary family through a
+`font-[family-name:…]` value, but the wildcard spelling it offers for that shorthand expands to
+a bare `var(--font-…)` placeholder that Lightning CSS refuses to parse, so the dev overlay
+reports it as a CSS failure. Families are declared as named keys in `@theme inline` instead, and
+`next/font` publishes them under `-face` variables so a theme key never aliases itself.
 
 ## License
 

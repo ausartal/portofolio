@@ -6,6 +6,8 @@ import { DigitalArchiveSection } from "@/presentation/sections/DigitalArchiveSec
 import { BiographySection } from "@/presentation/sections/BiographySection";
 import { ProjectsSection } from "@/presentation/sections/ProjectsSection";
 import { ContactSection } from "@/presentation/sections/ContactSection";
+import { BackToTop } from "@/presentation/components/BackToTop";
+import { ScrollProgress } from "@/presentation/components/ScrollProgress";
 import { SiteFooter } from "@/presentation/components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -15,12 +17,14 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <SmoothScroll>
+      <ScrollProgress />
+      <BackToTop />
       <main className="relative w-full">
         <HeroSection />
         <SelectedWorksSection />
         <DigitalArchiveSection />
-        <ProjectsSection />
         <BiographySection />
+        <ProjectsSection />
         <ContactSection footer={<SiteFooter />} />
       </main>
     </SmoothScroll>

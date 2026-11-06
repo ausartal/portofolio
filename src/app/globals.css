@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/*
+ * Font families are registered as real theme keys rather than referenced through
+ * arbitrary `font-[family-name:…]` values. The wildcard spelling Tailwind offers
+ * for that shorthand expands to a bare `var(--font-…)` placeholder, which
+ * Lightning CSS refuses to parse, and a theme key of the same name would resolve
+ * against itself. Hence explicit keys here and `-face` variables from next/font.
+ */
+@theme inline {
+  --font-inter: var(--font-inter-face);
+  --font-afacad: var(--font-afacad-face);
+  --font-afacad-flux: var(--font-afacad-flux-face);
+  --font-anton: var(--font-anton-face);
+  --font-dm-sans: var(--font-dm-sans-face);
+  --font-line-seed: var(--font-line-seed-face);
+}
+
 @theme {
   /* Palette — values sampled from the Figma document */
   --color-ink: #1e1e1e;
@@ -27,36 +43,58 @@
   --color-hairline: #dadddc;
 
   /* Type scale — each value measured off a Figma text node */
-  --text-display: 12.5rem; /* 200 */
+  --text-display: 12.5rem; /* 200 / 266.667 line height -> 1.3333 */
   --text-display--line-height: 1.3333;
   --text-display--letter-spacing: 0.1em;
 
-  --text-mega: 5.75rem; /* 92 */
+  --text-mega: 5.75rem; /* 92 / 92 -> 1 */
   --text-mega--line-height: 1;
   --text-mega--letter-spacing: 0.1em;
 
-  --text-hero: 5rem; /* 80 */
-  --text-hero--line-height: 1.05;
+  --text-hero: 2.5rem; /* 40 / 44 -> 1.1, hero tagline */
+  --text-hero--line-height: 1.1;
 
-  --text-chapter: 4.75rem; /* 76 */
+  --text-chapter: 4.75rem; /* 76 / 79.8 -> 1.05 */
   --text-chapter--line-height: 1.05;
   --text-chapter--letter-spacing: 0.1em;
 
-  --text-title: 1.8125rem; /* 29 */
+  --text-title: 1.8125rem; /* 29 / 31.9 -> 1.1 */
   --text-title--line-height: 1.1;
   --text-title--letter-spacing: 0.1724em;
 
-  --text-lede: 1.0625rem; /* 17 */
+  --text-lede: 1.0625rem; /* 17 / 28.05 -> 1.65 */
   --text-lede--line-height: 1.65;
 
-  --text-body: 0.9375rem; /* 15 */
+  --text-body: 0.9375rem; /* 15 / 23.25 -> 1.55 */
   --text-body--line-height: 1.55;
 
-  --text-caption: 0.75rem; /* 12 */
+  --text-caption: 0.75rem; /* 12 / 19.2 -> 1.6 where the comp sets it */
   --text-caption--line-height: 1.21;
 
-  --text-micro: 0.6875rem; /* 11 */
+  --text-micro: 0.6875rem; /* 11 / 13.3125 -> 1.21 */
   --text-micro--line-height: 1.21;
+
+  /* Comp-exact sizes used inside a Stage, where values are literal design
+     pixels rather than a responsive scale. Measured off the SVG glyph boxes. */
+  --text-stage-heading: 5.75rem; /* 92 / 92 -> 1. Cap height 61.5 in the comp. */
+  --text-stage-heading--line-height: 1;
+  --text-stage-heading--letter-spacing: 0.1em;
+
+  --text-stage-closing: 5.78125rem; /* 92.5 -> cap height 78.8 in comp [05] */
+  --text-stage-closing--line-height: 1;
+  --text-stage-closing--letter-spacing: 0.1em;
+
+  --text-stage-card-title: 1.5rem; /* 24 / 24 -> 1, comp [04] card titles */
+  --text-stage-card-title--line-height: 1;
+
+  --text-stage-tag: 0.875rem; /* 14 / 19 -> 1.357, comp tag labels */
+  --text-stage-tag--line-height: 1.357;
+
+  --text-stage-caption: 0.75rem; /* 12 / 19 -> 1.583, eyebrows and asides */
+  --text-stage-caption--line-height: 1.583;
+
+  --text-stage-body: 0.9375rem; /* 15 / 23.25 -> 1.55, aside and focus copy */
+  --text-stage-body--line-height: 1.55;
 
   /* Motion */
   --ease-quartz: cubic-bezier(0.22, 1, 0.36, 1);
@@ -92,9 +130,48 @@
      This wrapper reproduces that column and degrades it on narrower viewports. */
   .measure {
     width: 100%;
-    max-width: 92.1875rem;
+    max-width: 120rem;
     margin-inline: auto;
-    padding-inline: clamp(1.25rem, 4vw, 4.75rem);
+    padding-inline: clamp(1.25rem, 3.958vw, 4.75rem);
+  }
+
+  /* ---------------------------------------------------------------------
+   * Stage — literal 1920-px comp reproduction.
+   *
+   * Children are laid out inside a fixed `1920 x var(--stage-h)` pixel box
+   * that is then scaled to the available width by a transform. This is what
+   * keeps proportions and positions identical to the Figma comp at every
+   * viewport width; percentage/clamp layout cannot, because the comp's own
+   * pixel values only line up when the viewport happens to be exactly 1920.
+   *
+   * The outer element keeps `height: calc(var(--stage-h) * var(--stage-scale))`
+   * so the scaled box still occupies the correct amount of document flow.
+   * `--stage-scale` is derived from a 1920 px reference: on viewports at or
+   * above 1920 it is clamped to 1 so the comp renders 1:1 in design pixels.
+   * ------------------------------------------------------------------- */
+  .stage {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    container-type: inline-size;
+    aspect-ratio: 1920 / var(--stage-h);
+  }
+
+  /* `tan(atan2(a, b))` turns the length ratio `100cqw / 1920px` into a plain
+     number, which `scale()` requires. */
+  .stage__frame {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1920px;
+    height: calc(var(--stage-h) * 1px);
+    transform: scale(tan(atan2(100cqw, 1920px)));
+    transform-origin: top left;
+  }
+
+  .stage__inner {
+    position: relative;
+    width: 1920px;
+    height: 100%;
   }
 
   /* Screen-reader-only text that collapses to a single clipped pixel box.
@@ -111,6 +188,45 @@
     white-space: nowrap;
     border: 0;
   }
+}
+
+/* Custom scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #123dff #0b1033;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #0b1033;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #123dff, #7a8cff 60%, #eaff45);
+  border-radius: 999px;
+  border: 3px solid #0b1033;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0032ff, #123dff 60%, #eaff45);
+}
+
+/* Hero motion */
+@keyframes hero-marquee {
+  to { transform: translateX(-3900px); }
+}
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.hero-marquee {
+  animation: hero-marquee 40s linear infinite;
+}
+.hero-float {
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-marquee { animation: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
