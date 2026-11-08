@@ -37,7 +37,11 @@ export function MaskWords({ text, className, delay = 0, stagger = 0.08 }: MaskWo
             animate={inView ? { y: "0%", rotate: 0 } : undefined}
             transition={{ duration: 0.95, delay: delay + i * stagger, ease: [0.16, 1, 0.3, 1] }}
           >
-            {word}
+            {[...word].map((ch, c) => (
+              <span key={c} className="hl">
+                {ch}
+              </span>
+            ))}
             {i < words.length - 1 ? " " : ""}
           </motion.span>
         </span>

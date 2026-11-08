@@ -280,3 +280,44 @@ html[data-intro="on"] body {
 .tape-star {
   animation: tape-star-spin 5s linear infinite;
 }
+
+/* Heading letters lean when hovered (leans, never lifts, so the word masks do not clip them). */
+.hl {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl:hover {
+  transform: skewX(-9deg) scale(1.05);
+}
+
+/* Hero marquee: hovering a word flips it between solid and outline. */
+.mq-word {
+  pointer-events: all;
+  transition: fill 0.3s, stroke 0.3s;
+}
+.mq-solid:hover {
+  fill: transparent;
+  stroke: #1e1e1e;
+  stroke-width: 2.4px;
+}
+.mq-outline:hover {
+  fill: #1e1e1e;
+}
+
+/* Easter egg: blueprint mode (triple-click the corner logo). */
+html.blueprint *:not(svg *) {
+  outline: 1px solid rgba(18, 61, 255, 0.35);
+  outline-offset: -1px;
+}
+html.blueprint body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(18, 61, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(18, 61, 255, 0.12) 1px, transparent 1px);
+  background-size: 64px 64px;
+}

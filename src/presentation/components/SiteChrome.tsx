@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 const SECTIONS = [
@@ -22,6 +22,7 @@ export function SiteChrome() {
   const [active, setActive] = useState(0);
   const [ready, setReady] = useState(false);
   const [pastHero, setPastHero] = useState(false);
+  const taps = useRef<number[]>([]);
 
   useEffect(() => {
     const show = () => setReady(true);
@@ -59,6 +60,17 @@ export function SiteChrome() {
         {ready && pastHero && (
           <motion.a
             href="#hero"
+            onClick={(e) => {
+              // Three quick taps toggle blueprint mode instead of scrolling.
+              const now = performance.now();
+              taps.current = [...taps.current.filter((t) => now - t < 900), now];
+              if (taps.current.length >= 3) {
+                taps.current = [];
+                e.preventDefault();
+                e.stopPropagation();
+                window.dispatchEvent(new Event("egg:blueprint"));
+              }
+            }}
             aria-label="Back to top — A’AL"
             className="fixed bottom-5 right-5 z-40 block w-[clamp(56px,5vw,84px)] mix-blend-difference sm:bottom-8 sm:right-8"
             initial={{ opacity: 0, y: 24, scale: 0.8 }}

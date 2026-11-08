@@ -43,6 +43,8 @@ export function HeroMarquee() {
   const reduced = useReducedMotion();
   const x = useMotionValue(0);
   const dir = useRef(1);
+  const hovered = useRef(false);
+  const slow = useRef(1);
   const refs = useRef<(SVGTextElement | null)[]>([]);
   // Rough first guess so the server render has a sane layout before measuring.
   const [widths, setWidths] = useState<number[]>(() => SEQ.map((w) => w.length * 41));
@@ -73,7 +75,9 @@ export function HeroMarquee() {
     const b = boost.get();
     if (b > 0.08) dir.current = 1;
     else if (b < -0.08) dir.current = -1;
-    const step = (1.7 + Math.abs(b) * 1.5) * (delta / 16.67) * dir.current;
+    // Hovering the tape eases the drift down so the words can be read (and flipped).
+    slow.current += ((hovered.current ? 0.18 : 1) - slow.current) * 0.08;
+    const step = (1.7 + Math.abs(b) * 1.5) * slow.current * (delta / 16.67) * dir.current;
     let next = x.get() - step;
     if (next <= -tile) next += tile;
     if (next > 0) next -= tile;
@@ -95,7 +99,7 @@ export function HeroMarquee() {
             }}
             x={wx}
             y={26}
-            className="font-anton"
+            className={`font-anton mq-word ${st.stroke === "none" ? "mq-solid" : "mq-outline"}`}
             fontSize={72}
             fill={st.fill}
             stroke={st.stroke}
@@ -129,7 +133,17 @@ export function HeroMarquee() {
         </clipPath>
       </defs>
       <g clipPath="url(#hero-tape-clip)">
-        <g transform={`translate(0 1279.5) rotate(${ANGLE})`}>
+        <g
+          transform={`translate(0 1279.5) rotate(${ANGLE})`}
+          onPointerEnter={() => {
+            hovered.current = true;
+          }}
+          onPointerLeave={() => {
+            hovered.current = false;
+          }}
+        >
+          {/* Invisible hit area so the whole tape counts as hovered, not just the glyphs */}
+          <rect x={-200} y={-80} width={2400} height={160} fill="transparent" pointerEvents="all" />
           <motion.g style={{ x }}>{copies}</motion.g>
         </g>
       </g>

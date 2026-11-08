@@ -156,7 +156,10 @@ export function ProjectsSection() {
               <p className="max-w-[26rem] font-inter text-caption leading-[1.7] text-muted">{QUOTE}</p>
             </div>
             {!reduced && (
-              <div className="mt-[clamp(1rem,3.5vh,2.5rem)] flex items-center gap-3 font-inter text-[11px] font-semibold tracking-[0.2em] text-ink">
+              <div
+                data-cursor-label="SCROLL"
+                className="mt-[clamp(1rem,3.5vh,2.5rem)] inline-flex items-center gap-3 py-2 font-inter text-[11px] font-semibold tracking-[0.2em] text-ink"
+              >
                 SCROLL
                 <motion.span
                   aria-hidden

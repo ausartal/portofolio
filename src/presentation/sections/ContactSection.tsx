@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { contact, site } from "@/domain/content/portfolio";
 import { Ink } from "../components/Ink";
+import { Magnetic } from "../components/Magnetic";
+import { MaskWords } from "../components/MaskWords";
 import { Stage } from "../components/Stage";
 
 /** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
@@ -38,6 +40,19 @@ export function ContactSection({ footer }: { readonly footer: ReactNode }) {
 
 function ContactComp({ footer }: { readonly footer: ReactNode }) {
   const reduced = useReducedMotion();
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<number | undefined>(undefined);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(site.email);
+      setCopied(true);
+      window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${site.email}`;
+    }
+  };
 
   const fade = (delay: number) =>
     reduced
@@ -99,7 +114,9 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
           dx={-2}
           dy={1}
         >
-          <span id="contact-heading">{contact.headingLead}</span>
+          <span id="contact-heading">
+            <MaskWords text={contact.headingLead} delay={0.05} />
+          </span>
         </Ink>
       </motion.div>
 
@@ -170,10 +187,11 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
         <Ink box={[91.3, 984.8, 575.6, 15.6]} face="inter" size={16} lh={24} color="#757575" dx={-1} dy={1}>
           {contact.promptBody}
         </Ink>
+        <Magnetic className="absolute" style={{ left: 771, top: 966, width: 203, height: 50 }} strength={0.25}>
         <a
           href={`mailto:${site.email}`}
-          className="absolute border border-solid border-[#1F2126] bg-[#4C2929] transition-opacity duration-200 hover:opacity-90"
-          style={{ left: 771, top: 966, width: 203, height: 50 }}
+          data-cursor-label="GO"
+          className="relative block size-full border border-solid border-[#1F2126] bg-[#4C2929] transition-[opacity,background-color] duration-200 hover:bg-[#123DFF]"
         >
           <Ink
             as="span"
@@ -189,14 +207,22 @@ function ContactComp({ footer }: { readonly footer: ReactNode }) {
             {contact.action}
           </Ink>
         </a>
+        </Magnetic>
         <Ink box={[78.1, 1034, 439.8, 11.6]} face="inter" size={12} lh={19.2} ls={-0.004} color="#B3B3B3" dx={-1}>
           {contact.emailPrompt}
         </Ink>
-        <a href={`mailto:${site.email}`} className="hover:text-[#123DFF]" style={{ color: "#B3B3B3" }}>
-          <Ink as="span" box={[527.6, 1033.9, 164.4, 11.7]} face="inter" size={12} lh={19.2} ls={-0.011} dy={0.5} color="currentColor">
-            {site.email}
+        <button
+          type="button"
+          onClick={copyEmail}
+          data-cursor-label="COPY"
+          aria-label={`Copy email address ${site.email}`}
+          className="absolute cursor-pointer text-left transition-colors hover:text-[#123DFF]"
+          style={{ color: copied ? "#123DFF" : "#B3B3B3", left: 520, top: 1024, width: 330, height: 32 }}
+        >
+          <Ink as="span" box={[527.6, 1033.9, 164.4, 11.7]} origin={[520, 1024]} face="inter" size={12} lh={19.2} ls={-0.011} dy={0.5} color="currentColor">
+            {copied ? "COPIED ✦" : site.email}
           </Ink>
-        </a>
+        </button>
       </motion.div>
 
       {footer}

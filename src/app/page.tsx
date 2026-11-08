@@ -6,6 +6,7 @@ import { DigitalArchiveSection } from "@/presentation/sections/DigitalArchiveSec
 import { BiographySection } from "@/presentation/sections/BiographySection";
 import { ProjectsSection } from "@/presentation/sections/ProjectsSection";
 import { ContactSection } from "@/presentation/sections/ContactSection";
+import { EasterEggs } from "@/presentation/components/EasterEggs";
 import { CustomCursor } from "@/presentation/components/CustomCursor";
 import { Intro } from "@/presentation/components/Intro";
 import { ScrollProgress } from "@/presentation/components/ScrollProgress";
@@ -24,6 +25,7 @@ export default function Home() {
       <CustomCursor />
       <ScrollProgress />
       <SiteChrome />
+      <EasterEggs />
       <main className="relative w-full">
         <HeroSection />
         <SelectedWorksSection />

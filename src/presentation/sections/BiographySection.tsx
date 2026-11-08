@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { biography, categoryTags } from "@/domain/content/portfolio";
 import { Ink, type Box } from "../components/Ink";
+import { MaskWords } from "../components/MaskWords";
 import { Stage } from "../components/Stage";
 
 /** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
@@ -53,6 +54,16 @@ export function BiographySection() {
 function BiographyComp() {
   const reduced = useReducedMotion();
 
+  // Pointer tilt for the portrait; the slate plate behind it slides the other way for depth.
+  const mx = useMotionValue(0.5);
+  const my = useMotionValue(0.5);
+  const spring = { stiffness: 130, damping: 16, mass: 0.5 };
+  const k = reduced ? 0 : 1;
+  const rotY = useSpring(useTransform(mx, [0, 1], [-9 * k, 9 * k]), spring);
+  const rotX = useSpring(useTransform(my, [0, 1], [8 * k, -8 * k]), spring);
+  const plateX = useSpring(useTransform(mx, [0, 1], [14 * k, -14 * k]), spring);
+  const plateY = useSpring(useTransform(my, [0, 1], [10 * k, -10 * k]), spring);
+
   const fade = (delay: number) =>
     reduced
       ? {}
@@ -92,7 +103,7 @@ function BiographyComp() {
           color="#123DFF"
           dy={2}
         >
-          {biography.heading}
+          <MaskWords text={biography.heading} delay={0.05} />
         </Ink>
       </motion.div>
 
@@ -110,20 +121,42 @@ function BiographyComp() {
       </Ink>
 
       {/* Tilted slate plate behind the portrait */}
-      <div
+      <motion.div
         className="absolute bg-[#74767B]"
         style={{
           left: 189.663,
           top: 297,
           width: 416,
           height: 557,
-          transform: "rotate(7.70339deg)",
-          transformOrigin: "0 0",
+          rotate: 7.70339,
+          originX: 0,
+          originY: 0,
+          x: plateX,
+          y: plateY,
         }}
       />
       <motion.div
         className="absolute"
-        style={{ left: 150.454, top: 322.367, width: 416, height: 557 }}
+        data-cursor-label="HI"
+        style={{
+          left: 150.454,
+          top: 322.367,
+          width: 416,
+          height: 557,
+          rotateX: rotX,
+          rotateY: rotY,
+          transformPerspective: 1100,
+        }}
+        onPointerMove={(e) => {
+          if (e.pointerType !== "mouse") return;
+          const r = e.currentTarget.getBoundingClientRect();
+          mx.set((e.clientX - r.left) / r.width);
+          my.set((e.clientY - r.top) / r.height);
+        }}
+        onPointerLeave={() => {
+          mx.set(0.5);
+          my.set(0.5);
+        }}
         initial={reduced ? false : { opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -151,9 +184,9 @@ function BiographyComp() {
           dx={-3}
           dy={2}
         >
-          CURIOUS BY NATURE
+          <MaskWords text="CURIOUS BY NATURE" delay={0.1} />
           <br />
-          CREATIVE BY PRACTICE
+          <MaskWords text="CREATIVE BY PRACTICE" delay={0.3} />
         </Ink>
       </motion.div>
 
