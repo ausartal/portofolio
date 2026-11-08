@@ -1,3 +1,4 @@
+import { MaskWords } from "./MaskWords";
 import { Reveal } from "./Reveal";
 
 interface SectionHeaderProps {
@@ -68,13 +69,11 @@ export function SectionHeader({
       </Reveal>
 
       <div className="mt-1 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
-        <Reveal delay={0.06}>
-          <h2
-            className={`font-afacad text-[clamp(2.75rem,5.73vw,5.75rem)] font-bold leading-[1] tracking-[0.1em] ${headingClassName}`}
-          >
-            {heading}
-          </h2>
-        </Reveal>
+        <h2
+          className={`font-afacad text-[clamp(2.75rem,5.73vw,5.75rem)] font-bold leading-[1] tracking-[0.1em] ${headingClassName}`}
+        >
+          <MaskWords text={heading} delay={0.06} />
+        </h2>
 
         {aside ? (
           <Reveal delay={0.12} direction="left">
