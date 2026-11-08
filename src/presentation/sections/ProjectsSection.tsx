@@ -135,6 +135,7 @@ export function ProjectsSection() {
           <div className={reduced ? "" : "shrink-0 pr-[clamp(1rem,4vw,5rem)]"}>
             <h2
               id="projects-heading"
+              aria-label="A LITTLE BIT OF EVERYTHING."
               className="font-afacad text-[clamp(3rem,min(8.2vw,17vh),9.5rem)] font-bold leading-[0.98] tracking-[0.1em] text-electric"
             >
               <span className="block">A LITTLE BIT</span>
