@@ -6,8 +6,11 @@ import { DigitalArchiveSection } from "@/presentation/sections/DigitalArchiveSec
 import { BiographySection } from "@/presentation/sections/BiographySection";
 import { ProjectsSection } from "@/presentation/sections/ProjectsSection";
 import { ContactSection } from "@/presentation/sections/ContactSection";
-import { BackToTop } from "@/presentation/components/BackToTop";
+import { EasterEggs } from "@/presentation/components/EasterEggs";
+import { CustomCursor } from "@/presentation/components/CustomCursor";
+import { Intro } from "@/presentation/components/Intro";
 import { ScrollProgress } from "@/presentation/components/ScrollProgress";
+import { SiteChrome } from "@/presentation/components/SiteChrome";
 import { SiteFooter } from "@/presentation/components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -17,8 +20,12 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <SmoothScroll>
+      <Intro />
+      <div aria-hidden className="grain" />
+      <CustomCursor />
       <ScrollProgress />
-      <BackToTop />
+      <SiteChrome />
+      <EasterEggs />
       <main className="relative w-full">
         <HeroSection />
         <SelectedWorksSection />

@@ -106,9 +106,6 @@ export const metadata: Metadata = {
     title: "Ahmad Nab'al Falah — Bound to Canvas",
     description: "A creative practice without fixed boundaries.",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export const viewport: Viewport = {

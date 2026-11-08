@@ -1,10 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { useRef } from "react";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { digitalArchive } from "@/domain/content/portfolio";
 import { Ink } from "../components/Ink";
+import { Magnetic } from "../components/Magnetic";
+import { MaskWords } from "../components/MaskWords";
 import { Stage } from "../components/Stage";
+
+/** Wrapper covers the whole comp so the in-view observer has an area to measure; clicks still reach the content. */
+const FILL = "absolute inset-0 pointer-events-none [&_a]:pointer-events-auto";
 
 /**
  * [02] DIGITAL ARCHIVES — comp `[02]-Page.svg`, 1920 x 1080, field #022BD3.
@@ -42,13 +48,19 @@ export function DigitalArchiveSection() {
 function ArchiveComp() {
   const reduced = useReducedMotion();
 
+  // The showcase wipes open once its (unclipped) frame is in view, then drifts inside it as the page scrolls.
+  const frameRef = useRef<HTMLDivElement>(null);
+  const frameIn = useInView(frameRef, { once: true, amount: 0.3 });
+  const { scrollYProgress } = useScroll({ target: frameRef, offset: ["start end", "end start"] });
+  const driftY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -52]);
+
   const fade = (delay: number) =>
     reduced
       ? {}
       : {
           initial: { opacity: 0 },
           whileInView: { opacity: 1 },
-          viewport: { once: true, amount: 0.1 },
+          viewport: { once: true, amount: "some" as const },
           transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
         };
 
@@ -71,7 +83,7 @@ function ArchiveComp() {
         {digitalArchive.label}
       </Ink>
 
-      <motion.div {...fade(0.06)}>
+      <motion.div className={FILL} {...fade(0.06)}>
         <Ink
           as="h3"
           box={[80.6, 109.6, 1176.2, 61.3]}
@@ -84,7 +96,7 @@ function ArchiveComp() {
           dx={-4}
           dy={4}
         >
-          {digitalArchive.heading}
+          <MaskWords text={digitalArchive.heading} delay={0.05} />
         </Ink>
       </motion.div>
 
@@ -96,7 +108,7 @@ function ArchiveComp() {
         {"trapped inside.”"}
       </Ink>
 
-      <motion.div {...fade(0.1)}>
+      <motion.div className={FILL} {...fade(0.1)}>
         <Ink
           as="h4"
           box={[78.8, 274.7, 625.1, 148.5]}
@@ -108,14 +120,14 @@ function ArchiveComp() {
           dx={-3}
           dy={1}
         >
-          THE EDGELESS
+          <MaskWords text="THE EDGELESS" delay={0.1} />
           <br />
-          CANVAS.
+          <MaskWords text="CANVAS." delay={0.3} />
         </Ink>
       </motion.div>
 
       {project.paragraphs.map((paragraph, index) => (
-        <motion.div key={paragraph.slice(0, 24)} {...fade(0.16 + index * 0.06)}>
+        <motion.div key={paragraph.slice(0, 24)} className={FILL} {...fade(0.16 + index * 0.06)}>
           <Ink
             box={index === 0 ? [75.8, 493.8, 656.1, 67.5] : [76.8, 604.8, 669.5, 67.6]}
             face="inter"
@@ -130,11 +142,12 @@ function ArchiveComp() {
         </motion.div>
       ))}
 
+      <Magnetic className="absolute" style={{ left: 64, top: 776, width: 140, height: 36 }} strength={0.35}>
       <motion.a
         {...fade(0.28)}
         href="#transmit"
-        className="group absolute block"
-        style={{ left: 64, top: 776, width: 140, height: 36 }}
+        data-cursor-label="GO"
+        className="group relative block size-full"
       >
         <Ink
           as="span"
@@ -159,10 +172,11 @@ function ArchiveComp() {
           <path d="M0 11.5L13 0M13 6.5V0H7" stroke="#EAFF45" strokeWidth="2" />
         </svg>
       </motion.a>
+      </Magnetic>
 
       <span className="absolute bg-white/25" style={{ left: 70, top: 842, width: 679, height: 1 }} />
 
-      <motion.div {...fade(0.32)}>
+      <motion.div className={FILL} {...fade(0.32)}>
         <Ink
           box={[71, 864.8, 111.5, 10.5]}
           face="inter"
@@ -180,7 +194,7 @@ function ArchiveComp() {
       </motion.div>
 
       {/* Framed showcase */}
-      <div className="absolute bg-[#E7E7E7]" style={{ left: 801, top: 272, width: 1043, height: 640 }}>
+      <div ref={frameRef} className="absolute bg-[#E7E7E7]" style={{ left: 801, top: 272, width: 1043, height: 640 }}>
         <svg
           viewBox="0 0 33 35"
           fill="none"
@@ -194,13 +208,12 @@ function ArchiveComp() {
       <motion.div
         className="absolute overflow-hidden bg-black"
         style={{ left: 841, top: 315, width: 964, height: 553, boxShadow: "19px 19px 27.4px rgba(0,0,0,0.25)" }}
-        initial={reduced ? false : { scale: 1.03 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        initial={reduced ? false : { clipPath: "inset(0 100% 0 0)", scale: 1.04 }}
+        animate={frameIn || reduced ? { clipPath: "inset(0 0% 0 0)", scale: 1 } : undefined}
+        transition={{ duration: 1.3, ease: [0.76, 0, 0.24, 1] }}
       >
         {/* The comp scales the 1901 x 1199 bitmap to the frame's width, so it is 607.8 px tall and cropped to 553 from the top */}
-        <div className="absolute left-0 top-0" style={{ width: 964, height: 607.8 }}>
+        <motion.div className="absolute left-0 top-0" style={{ width: 964, height: 607.8, y: driftY }}>
           <Image
             src={project.image}
             alt="The Edgeless Canvas digital archive showcase"
@@ -208,7 +221,7 @@ function ArchiveComp() {
             sizes="964px"
             className="object-fill"
           />
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );

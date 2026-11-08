@@ -22,6 +22,11 @@ export function SmoothScroll({ children }: { readonly children: React.ReactNode 
       touchMultiplier: 1.6,
     });
 
+    // The intro holds scrolling until its curtain has lifted.
+    if (document.documentElement.dataset.intro) lenis.stop();
+    const onIntroDone = () => lenis.start();
+    window.addEventListener("intro:done", onIntroDone);
+
     const raf = (time: number) => {
       lenis.raf(time);
       frame.current = requestAnimationFrame(raf);
@@ -45,6 +50,7 @@ export function SmoothScroll({ children }: { readonly children: React.ReactNode 
 
     return () => {
       document.removeEventListener("click", onAnchorClick);
+      window.removeEventListener("intro:done", onIntroDone);
       if (frame.current !== null) cancelAnimationFrame(frame.current);
       lenis.destroy();
     };
